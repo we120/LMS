@@ -22,5 +22,17 @@ function select_all_books() {
 }
 
 
+function executeRegisterProcedure($name, $email, $password, $mobile, $address) {
+    $connection = mysqli_connect("localhost", "root", "", "your_database_name");
+
+    if (!$connection) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    $query = "CALL register_user('$name', '$email', '$password', '$mobile', '$address')";
+    $result = mysqli_query($connection, $query);
+
+    mysqli_close($connection);
+}
 
 ?>

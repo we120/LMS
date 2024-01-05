@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="issue_book.php">Admin Approval Book</a>
+                    <a class="nav-link" href="admin_approval.php">Admin Approval Book</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="audit_books.php">Audit Books</a>

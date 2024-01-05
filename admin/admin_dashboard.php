@@ -117,9 +117,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["execute_update_proced
 		      <li class="nav-item dropdown">
 	        	<a class="nav-link dropdown-toggle" data-toggle="dropdown">My Profile </a>
 	        	<div class="dropdown-menu">
-	        		<a class="dropdown-item" href="">View Profile</a>
+	        		<a class="dropdown-item" href="view_profile.php">View Profile</a>
 	        		<div class="dropdown-divider"></div>
-	        		<a class="dropdown-item" href="#">Edit Profile</a>
+	        		<a class="dropdown-item" href="edit_profile.php">Edit Profile</a>
 	        		<div class="dropdown-divider"></div>
 	        		<a class="dropdown-item" href="change_password.php">Change Password</a>
 	        	</div>
