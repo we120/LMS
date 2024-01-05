@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2023 at 01:39 PM
+-- Generation Time: Jan 05, 2024 at 05:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,6 +58,49 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `BorrowBook` (IN `p_user_id` INT, IN
     END IF;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `change_admin_password` (IN `p_email` VARCHAR(255), IN `p_old_password` VARCHAR(255), IN `p_new_password` VARCHAR(255), OUT `p_message` VARCHAR(255))   BEGIN
+    DECLARE existing_password VARCHAR(255);
+
+   
+    SELECT password INTO existing_password FROM admins WHERE email = p_email;
+
+    IF existing_password IS NOT NULL AND existing_password = p_old_password THEN
+        
+        UPDATE admins SET password = p_new_password WHERE email = p_email;
+        SET p_message = 'Password successfully updated.';
+    ELSE
+        SET p_message = 'Invalid email or old password. Password not updated.';
+    END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `change_password` (IN `p_email` VARCHAR(255), IN `p_current_password` VARCHAR(255), IN `p_new_password` VARCHAR(255), OUT `p_message` VARCHAR(255))   BEGIN
+    DECLARE user_exists INT DEFAULT 0;
+    DECLARE current_password_correct INT DEFAULT 0;
+
+   
+    SELECT COUNT(*) INTO user_exists FROM users WHERE email = p_email;
+
+   
+    IF user_exists > 0 THEN
+        SELECT COUNT(*) INTO current_password_correct
+        FROM users
+        WHERE email = p_email AND password = p_current_password;
+
+      
+        IF current_password_correct > 0 THEN
+            UPDATE users
+            SET password = p_new_password
+            WHERE email = p_email;
+
+            SET p_message = 'Password changed successfully.';
+        ELSE
+            SET p_message = 'Incorrect current password. Password not changed.';
+        END IF;
+    ELSE
+        SET p_message = 'User not found. Password not changed.';
+    END IF;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteAuthor` (IN `p_author_id` INT)   BEGIN
     DELETE FROM authors WHERE author_id = p_author_id;
 END$$
@@ -85,6 +128,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_book` (IN `p_book_name` VARC
     VALUES (p_book_name, p_author_id, p_cat_id, p_ISBN, p_book_quantity);
 
     SELECT 'Book added successfully' AS result;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `register_user` (IN `p_student_name` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password` VARCHAR(255), IN `p_mobile` VARCHAR(20), IN `p_address` VARCHAR(255))   BEGIN
+    DECLARE user_exists INT DEFAULT 0;
+
+
+    SELECT COUNT(*) INTO user_exists FROM users WHERE email = p_email;
+
+    
+    IF user_exists = 0 THEN
+
+        INSERT INTO users (student_name, email, password, mobile, address)
+        VALUES (p_student_name, p_email, p_password, p_mobile, p_address);
+
+        
+        SELECT 'Registration successful' AS message;
+    ELSE
+       
+        SELECT 'Email already exists. Please choose a different email.' AS message;
+    END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ReturnBook` (IN `p_borrow_id` INT, OUT `p_result` VARCHAR(255))   BEGIN
@@ -391,7 +454,7 @@ CREATE TABLE `issued_books` (
 --
 
 INSERT INTO `issued_books` (`borrow_id`, `user_id`, `book_id`, `issue_date`, `return_date`, `status`) VALUES
-(1, 1, 6, '2023-12-27', NULL, 'Pending'),
+(1, 1, 6, '2023-12-27', NULL, 'Approved'),
 (2, 8, 10, '2023-12-27', NULL, 'Approved'),
 (3, 1, 10, '2023-12-27', '2023-12-27', 'Returned'),
 (4, 8, 6, '2023-12-27', NULL, 'Approved'),
@@ -503,7 +566,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `student_name`, `email`, `password`, `mobile`, `address`) VALUES
 (1, 'joyjoy', 'joyjoy@gmail.com', '123456789', 912311231, 'Dyan lang\r\n'),
-(8, 'Jb Locsin', 'jbreylocsin@gmail.com', '123123123', 678768123, 'maligaya saglit');
+(8, 'Jb Locsin', 'jbreylocsin@gmail.com', '1234567', 678768123, 'maligaya saglit'),
+(9, 'si ako', 'ako@gmail.com', '123123', 367547234, 'dyan lang');
 
 -- --------------------------------------------------------
 
@@ -713,7 +777,7 @@ ALTER TABLE `update_audit`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
