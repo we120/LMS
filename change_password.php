@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
             <div class="navbar-header">
                 <a class="navbar-brand" href="user_dashboard.php">Library Management System (LMS)</a>
             </div>
-            <font style="color: white"><span><strong>Welcome: <?php echo $_SESSION['name'];?></strong></span></font>
+            <font style="color: white"><span><strong>Welcome: <?php echo $_SESSION['student_name'];?></strong></span></font>
             <font style="color: white"><span><strong>Email: <?php echo $_SESSION['email'];?></strong></font>
             <ul class="nav navbar-nav navbar-right">
                 <li class="nav-item dropdown">
